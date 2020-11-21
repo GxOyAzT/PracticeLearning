@@ -7,11 +7,9 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            PersonModel person = new PersonModel();
-            PersonModel nullPersonModel = null;
+            int[] numbers = new[] { 0, 10, 20, 30, 40, 50 };
 
-            Console.WriteLine(nullPersonModel?.GetType());
-            Console.WriteLine(person?.GetType());
+            int[] subNumbers = numbers[1..3];
         }
     }
 }
