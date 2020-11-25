@@ -6,60 +6,49 @@ using System.Threading.Tasks;
 
 namespace ConsoleUI
 {
-    public abstract class Bread
+    public class PersonModel
     {
-        public void Create()
-        {
-            AddIngredients();
-            MixIngredients();
-            Bake();
-            Slice();
-        }
-
-        protected abstract void AddIngredients();
-        protected virtual void MixIngredients()
-        {
-            Console.WriteLine($"Mix Ingredients. { this.GetType().Name }");
-        }
-        protected abstract void Bake();
-        protected abstract void Slice();
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public bool IsMale { get; set; }
     }
 
-    public class Baguette : Bread
+    public interface IGetPeopleFromDb
     {
-        protected override void AddIngredients()
-        {
-            Console.WriteLine("Baguette add ingredients.");
-        }
+        List<PersonModel> Get();
+    }
 
-        protected override void Bake()
+    public class GetPeopleFromDb : IGetPeopleFromDb
+    {
+        public List<PersonModel> Get()
         {
-            Console.WriteLine("Baguette bake.");
-
-        }
-
-        protected override void Slice()
-        {
-            Console.WriteLine("Baguette slice.");
+            return new List<PersonModel>()
+            {
+                new() { Id = 1, FullName = "Name1", IsMale = false },
+                new() { Id = 2, FullName = "Name2", IsMale = false },
+                new() { Id = 3, FullName = "Name3", IsMale = true },
+                new() { Id = 4, FullName = "Name4", IsMale = false }
+            };
         }
     }
 
-    public class Roll : Bread
+    public interface IGetAllFemales
     {
-        protected override void AddIngredients()
+        public List<PersonModel> Get();
+    }
+
+    public class GetAllFemales : IGetAllFemales
+    {
+        public GetAllFemales(IGetPeopleFromDb getPeopleFromDb)
         {
-            Console.WriteLine("Roll add ingredients.");
+            _getPeopleFromDb = getPeopleFromDb;
         }
 
-        protected override void Bake()
-        {
-            Console.WriteLine("Roll bake.");
+        IGetPeopleFromDb _getPeopleFromDb { get; }
 
-        }
-
-        protected override void Slice()
+        public List<PersonModel> Get()
         {
-            Console.WriteLine("Roll slice.");
+            return _getPeopleFromDb.Get().Where(e => e.IsMale is false).ToList();
         }
     }
 }
