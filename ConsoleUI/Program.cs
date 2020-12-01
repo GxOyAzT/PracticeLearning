@@ -1,25 +1,27 @@
-﻿using System;
-using ConsoleUI;
+﻿using ConsoleUI;
+using System;
 
-Person person = new()
+Console.WriteLine();
+
+for (; ; )
 {
-    Name = "Jakub",
-    Age = 60,
-    Income = 1500f
-};
+    ISaveData saveData = Creator.Create(GetUserInput());
 
-Request request = new Request() { Data = person };
+    saveData.Save("Hello");
+}
 
-MaxAgeHandler maxAgeHandler = new();
-MaxNameLengthHandler MaxNameLengthHandler = new();
-MaxIncomeHandler MaxIncomeHandler = new();
-
-maxAgeHandler.SetNextHandler(MaxNameLengthHandler);
-MaxNameLengthHandler.SetNextHandler(MaxIncomeHandler);
-
-maxAgeHandler.Process(request);
-
-foreach(var message in request.ValidationMessages)
+int GetUserInput()
 {
-    Console.WriteLine(message);
+    for(; ; )
+    {
+        Console.WriteLine("Save to file: 1");
+        Console.WriteLine("Save to sql: 2");
+
+        int userInput = Convert.ToInt32(Console.ReadLine());
+
+        if (userInput is not 1 and not 2 and not 3) 
+            continue;
+        else 
+            return userInput;
+    }
 }

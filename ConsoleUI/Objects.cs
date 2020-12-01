@@ -6,91 +6,49 @@ using System.Threading.Tasks;
 
 namespace ConsoleUI
 {
-    interface IHandler
+    interface ISaveData
     {
-        void SetNextHandler(IHandler handler);
-        void Process(Request request);
+        void Save(string data);
     }
 
-    abstract class BaseHandler : IHandler
+    class SaveDataToSql : ISaveData
     {
-        protected IHandler _nextHandler;
-
-        public BaseHandler()
+        public void Save(string data)
         {
-            _nextHandler = null;
-        }
-
-        public abstract void Process(Request request);
-
-        public void SetNextHandler(IHandler handler)
-        {
-            _nextHandler = handler;
+            Console.WriteLine("\nSave data to SQL.\n");
         }
     }
 
-    class Person
+    class SaveDataToFile : ISaveData
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public float Income { get; set; }
-    }
-
-    class Request
-    {
-        public object Data { get; set; }
-        public List<string> ValidationMessages;
-
-        public Request()
+        public void Save(string data)
         {
-            ValidationMessages = new List<string>();
+            Console.WriteLine("\nSave data to FILE.\n");
         }
     }
 
-    class MaxAgeHandler : BaseHandler
+    class SaveDataToOracle : ISaveData
     {
-        public override void Process(Request request)
+        public void Save(string data)
         {
-            if (request.Data is Person person)
-            {
-                if (person.Age > 55) request.ValidationMessages.Add("Invalid age.");
-                if (_nextHandler != null) _nextHandler.Process(request);
-            }
-            else
-            {
-                throw new Exception("Invalid message data");
-            }
+            Console.WriteLine("\nSave data to ORACLE.\n");
         }
     }
 
-    class MaxNameLengthHandler : BaseHandler
+    class Creator
     {
-        public override void Process(Request request)
+        public static ISaveData Create(int x)
         {
-            if (request.Data is Person person)
+            switch (x)
             {
-                if (person.Name.Length > 10) request.ValidationMessages.Add("Invalid name.");
-                if (_nextHandler != null) _nextHandler.Process(request);
-            }
-            else
-            {
-                throw new Exception("Invalid message data");
-            }
-        }
-    }
-
-    class MaxIncomeHandler : BaseHandler
-    {
-        public override void Process(Request request)
-        {
-            if (request.Data is Person person)
-            {
-                if (person.Income > 1000) request.ValidationMessages.Add("Invalid income.");
-                if (_nextHandler != null) _nextHandler.Process(request);
-            }
-            else
-            {
-                throw new Exception("Invalid message data");
+                case 1:
+                    return new SaveDataToFile();
+                case 2:
+                    return new SaveDataToSql();
+                case 3:
+                    return new SaveDataToOracle();
+                default:
+                    throw new Exception("Incorrect data format.");
             }
         }
     }
