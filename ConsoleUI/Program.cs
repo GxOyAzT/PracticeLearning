@@ -1,16 +1,15 @@
 ﻿using System;
 using ClassLibrary;
 
-CarBuilder carBuilder = new CarBuilder();
-carBuilder.SetDoors(5);
-carBuilder.SetSeats(5);
-carBuilder.SetEngine("Sport");
-carBuilder.SetStering("Wheel");
+PersonModel person = new PersonModel()
+{
+    Id = Guid.NewGuid(),
+    FullName = "AAA",
+    Age = 55
+};
 
-Car car = carBuilder.Build();
+PersonModel clonePerson = person.Clone();
 
-MakeSportCar makeSportCar = new MakeSportCar();
-
-Car sportCar = makeSportCar.Make();
+clonePerson.Age = 10;
 
 Console.WriteLine();
