@@ -1,27 +1,16 @@
-﻿using ConsoleUI;
-using System;
+﻿using System;
+using ClassLibrary;
+
+CarBuilder carBuilder = new CarBuilder();
+carBuilder.SetDoors(5);
+carBuilder.SetSeats(5);
+carBuilder.SetEngine("Sport");
+carBuilder.SetStering("Wheel");
+
+Car car = carBuilder.Build();
+
+MakeSportCar makeSportCar = new MakeSportCar();
+
+Car sportCar = makeSportCar.Make();
 
 Console.WriteLine();
-
-for (; ; )
-{
-    ISaveData saveData = Creator.Create(GetUserInput());
-
-    saveData.Save("Hello");
-}
-
-int GetUserInput()
-{
-    for(; ; )
-    {
-        Console.WriteLine("Save to file: 1");
-        Console.WriteLine("Save to sql: 2");
-
-        int userInput = Convert.ToInt32(Console.ReadLine());
-
-        if (userInput is not 1 and not 2 and not 3) 
-            continue;
-        else 
-            return userInput;
-    }
-}
