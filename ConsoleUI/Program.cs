@@ -1,10 +1,16 @@
 ﻿using System;
 using ClassLibrary;
 
-string x = "Hello";
+Model x = new();
 
-Model y = (Model)x;
+SubModel y ;
 
-ModelImplicit modelImplicit = x;
+y = x as SubModel;
+
+if (y != null)
+    Console.WriteLine("OK");
+else
+    Console.WriteLine("NOT OK");
+    
 
 Console.WriteLine();
