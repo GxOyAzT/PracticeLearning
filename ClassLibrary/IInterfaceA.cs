@@ -4,7 +4,8 @@ using System.Text;
 
 namespace ClassLibrary
 {
-    public class SubModel : Model
+    public interface IInterfaceA
     {
+        public void Method();
     }
 }

@@ -1,16 +1,14 @@
 ﻿using System;
 using ClassLibrary;
 
-Model x = new();
+IInterfaceA interA = new ClassAB();
 
-SubModel y ;
+interA.Method();
 
-y = x as SubModel;
+IInterfaceB interB = new ClassAB();
 
-if (y != null)
-    Console.WriteLine("OK");
-else
-    Console.WriteLine("NOT OK");
-    
+interB.Method();
+
+ClassAB classAB = new();
 
 Console.WriteLine();
