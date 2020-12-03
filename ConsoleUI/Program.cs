@@ -9,6 +9,8 @@ IInterfaceB interB = new ClassAB();
 
 interB.Method();
 
-ClassAB classAB = new();
+ClassAB classAB = new() { x = 10 };
+
+classAB.IncrementX(10);
 
 Console.WriteLine();

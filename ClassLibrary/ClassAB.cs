@@ -6,6 +6,8 @@ namespace ClassLibrary
 {
     public class ClassAB : IInterfaceA, IInterfaceB
     {
+        public int x { get; set; }
+
         void IInterfaceA.Method()
         {
             Console.WriteLine("IInterfaceA.Method()");
