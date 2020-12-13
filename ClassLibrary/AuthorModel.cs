@@ -8,6 +8,7 @@ namespace ClassLibrary
         public Guid Id { get; set; }
         public string Name { get; set; }
         public DateTime Dob { get; set; }
+        public string[] Pseudonyms { get; set; }
 
         public ICollection<BookModel> Books { get; set; }
     }

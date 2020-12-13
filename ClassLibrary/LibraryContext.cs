@@ -21,6 +21,7 @@ namespace ClassLibrary
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Name).HasColumnName("name");
                 entity.Property(e => e.Dob).HasColumnName("dob");
+                entity.Property(e => e.Pseudonyms).HasColumnName("pseudonyms");
             });
 
             modelBuilder.Entity<BookModel>(entity =>

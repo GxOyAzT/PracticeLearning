@@ -14,8 +14,16 @@ namespace ClassLibrary
                 {
                     Id = Guid.Parse("bb227f80-ea3c-4a6a-8fc6-d19200b06d96"),
                     Name = "Author 1",
-                    Dob = DateTime.Now.Date
-                }
+                    Dob = DateTime.Now.Date,
+                    Pseudonyms = new[] { "Author 1 Pseudo 1", "Author 1 Pseudo 2" }
+                },
+                new AuthorModel()
+                {
+                    Id = Guid.Parse("d7b2f318-1a2b-48d3-a984-aa4c8c20fd79"),
+                    Dob = DateTime.Now.Date.AddDays(-2000),
+                    Name = "Author 2",
+                    Pseudonyms = new[] { "Author 2 Pseudo 1", "Author 2 Pseudo 2" }
+                },
             };
         }
 
