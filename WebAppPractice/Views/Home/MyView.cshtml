@@ -1,0 +1,20 @@
+﻿@model MyViewViewModel 
+
+<div>
+    @foreach (var item in Model.ObjectModels)
+    {
+        <div style="height: 100px; width: 500px; background:red;" onclick="deletePush('@item.Id')">@item.Id</div>
+    }
+
+
+    <form method="post">
+        <input hidden name="guid" type="text" id="SelectedFlashcardIdForDeleteInputId"/>
+        <input type="submit" asp-action="MyViewResult"/>
+    </form>
+</div>
+
+<script>
+    function deletePush(id) {
+        document.getElementById("SelectedFlashcardIdForDeleteInputId").value = id;
+     }
+</script>
