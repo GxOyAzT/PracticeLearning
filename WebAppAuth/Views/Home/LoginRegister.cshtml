@@ -1,0 +1,48 @@
+﻿@model List<string>
+
+<div id="Shader"></div>
+
+<div class="LoginRegisterMainContainer">
+    <div class="LoginContainer LoginRegisterContainers" id="LoginContainerId" onclick="ClickLoginContainer()">
+        <div class="LoginRegisterLabel" id="LoginLabel">Log in</div>
+        <form method="post" id="LogInFormId">
+            <input name="email" type="text" placeholder="emial" class="LoginRegisterInput" />
+            <input name="password" type="password" style="margin-top: 20px;" placeholder="password" class="LoginRegisterInput" />
+            <button class="LoginButton LoginRegisterButton" type="submit" asp-action="Login">Log in</button>
+        </form>
+    </div>
+    <div class="RegisterContainer LoginRegisterContainers" id="RegisterContainerId" onclick="ClickRegisterContainer()">
+        <div class="LoginRegisterLabel" id="RegisterLabel">Register</div>
+        <form method="post" id="RegisterFormId">
+            <input name="userName" type="text" placeholder="user name" class="LoginRegisterInput" />
+            <input name="email" type="text" style="margin-top: 20px;" placeholder="emial" class="LoginRegisterInput" />
+            <input name="password" type="password" style="margin-top: 20px;" placeholder="password" class="LoginRegisterInput" />
+            <input name="repeatPassword" type="password" style="margin-top: 20px;" placeholder="repeat password" class="LoginRegisterInput" />
+            <button class="RegisterButton LoginRegisterButton" type="submit" asp-action="Register">Register</button>
+        </form>
+    </div>
+</div>
+<div>
+    <div id="ButtonChangeToLogIn" onclick="ClickRegisterButton()">
+        <input value="Register" readonly />
+    </div>
+    <div id="ButtonChangeToRegister" onclick="ClickLoginButton()">
+        <input value="Login" readonly />
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    <div class="LoginErrorMessagesPanel" id="LoginErrorMessagesPanelId">
+        @foreach(var message in Model)
+        {
+            <p>@message</p>
+        }
+        <br />
+        <div class="LEMPHideButton" onClick="HideLoginErrorMessagesPanel()">
+            <p>OK</p>
+        </div>
+    </div>
+}
+
+<script src="/js/LoginRegisterScript.js"></script>

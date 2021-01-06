@@ -1,0 +1,17 @@
+﻿@model WebAppPractice.PracticeAspForListViewModel
+
+<form method="post">
+    @for (int i = 0; i < Model.Employees.Count; i++)
+    {
+        <input asp-for="@Model.Employees[i].Id" />
+        <input asp-for="@Model.Employees[i].Name" />
+        <input asp-for="@Model.Employees[i].Contract" />
+        <br />
+        <br />
+        <br />
+    }
+    <br />
+    <br />
+    <br />
+    <input type="submit"/>
+</form>

@@ -1,47 +1,51 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAppPractice.Models;
 
 namespace WebAppPractice.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        [Authorize]
+        public IActionResult Private()
         {
+            return Index();
+        }
+
+        [HttpGet]
+        public IActionResult PracticeAspForList()
+        {
+            var model = new PracticeAspForListViewModel()
+            {
+                Employees = new System.Collections.Generic.List<Employee>() 
+                {
+                    new Employee()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Emp 1",
+                        Contract = Contract.B2B
+                    },
+                    new Employee()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Emp 2",
+                        Contract = Contract.Intern
+                    }
+                }
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult PracticeAspForList(PracticeAspForListViewModel model)
+        { 
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public IActionResult MyView()
-        {
-            return View(new MyViewViewModel() { ObjectModels = HardcodedData.GetObjectModels() });
-        }
-
-        public IActionResult MyViewResult(string guid)
-        {
-            return View(guid);
         }
     }
 }

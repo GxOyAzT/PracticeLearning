@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Main.css" />
+    <link rel="stylesheet" href="/css/LoginRegisterStyle.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@300&display=swap" rel="stylesheet">
+    <title>Flashcards</title>
+</head>
+<body>
+    XD
+    @if (!User.Identity.IsAuthenticated)
+    {
+        @RenderBody()
+    }
+    else
+    {
+        <div id="IconContainer" onclick="HideOrShowNavigationBar()">
+        </div>
+
+        <div id="NavigationBar">
+            <div class="NBButton">
+                <a class="NBBLink" href="groups.html"><img class="NBBLImage" src="/images/folder-icon.png"></a>
+                <div class="NBButtonClue">
+                    <p>Flashcard Groups</p>
+                </div>
+            </div>
+            <div class="NBButton">
+                <a class="NBBLink" href="#"><img class="NBBLImage" src="/images/logout-icon.png"></a>
+                <div class="NBButtonClue">
+                    <p>Log out</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="MainFrame">
+            @RenderBody()
+        </div>
+    }
+</body>
+</html>

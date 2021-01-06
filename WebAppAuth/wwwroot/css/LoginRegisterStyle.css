@@ -1,0 +1,243 @@
+﻿.LoginRegisterMainContainer {
+    position: absolute;
+    height: 550px;
+    width: 650px;
+    top: 50%;
+    left: calc(50% - 150px);
+    transform: translate(-50%, -50%);
+    background: transparent;
+}
+
+.LoginContainer {
+    height: 100%;
+    width: 330px;
+    right: 0px;
+    background: -webkit-linear-gradient( 90deg, hsla(48, 78%, 82%, 1) 0%, hsla(340, 87%, 59%, 1) 100% );
+}
+
+.RegisterContainer {
+    height: 80%;
+    width: 270px;
+    right: calc(100% - 270px);
+    background: -webkit-linear-gradient( 270deg, hsla(217, 100%, 50%, 1) 20%, hsla(186, 100%, 69%, 1) 100% );
+}
+
+.LoginRegisterContainers {
+    position: absolute;
+    transition: all 1s;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 20px;
+    font-size: 5vh;
+    overflow: hidden;
+}
+
+.LoginRegisterLabel {
+    background: transparent;
+    position: relative;
+    transform: translateY(-50%);
+    text-align: center;
+    font-size: 60px;
+    color: white;
+}
+
+#LoginLabel {
+    top: 20%;
+    transition: all 1s;
+}
+
+#RegisterLabel {
+    top: 50%;
+    transition: all 1s;
+}
+
+#LogInFormId {
+    position: absolute;
+    height: 30%;
+    top: 40%;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.5s;
+    background: transparent;
+}
+
+#RegisterFormId {
+    position: absolute;
+    top: 100%;
+    height: auto;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.5s;
+    background: transparent;
+}
+
+.LoginRegisterInput {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 35px;
+    font-size: 20px;
+    border: none;
+    border-width: 0px;
+    border-bottom: white solid 1px;
+    color: white;
+    background: transparent;
+    text-align: center;
+    box-shadow: none;
+}
+
+.LoginRegisterInput:focus {
+    outline: none;
+    border-color: khaki;
+}
+
+.LoginRegisterInput:hover {
+    border-color: khaki;
+}
+
+.LoginRegisterButton {
+    border: none;
+    margin-top: 30px;
+    height: 40px;
+    width: 100%;
+    background: transparent;
+    display: block;
+    font-size: 26px;
+    color: white;
+    outline: none;
+    border-radius: 15px;
+    border: white solid 2px;
+}
+
+.LoginButton:hover {
+    background: hsla(340, 87%, 59%, 1) 100%;
+}
+
+.LoginButton:active {
+    background: rgba(241, 59, 120, 0.637) 100%;
+}
+
+.RegisterButton:hover {
+    background: hsla(217, 100%, 50%, 1) 20%;
+}
+
+.RegisterButton:active {
+    background: rgba(0, 98, 255, 0.644) 20%;
+}
+
+#ButtonChangeToLogIn {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 5%;
+    width: 80%;
+    background: -webkit-linear-gradient( 0deg, hsla(217, 100%, 50%, 1) 20%, hsla(186, 100%, 69%, 1) 100% );
+    border-radius: 10px;
+}
+
+    #ButtonChangeToLogIn > input {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        color: white;
+        text-align: center;
+    }
+
+#ButtonChangeToRegister {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 5%;
+    width: 80%;
+    border-radius: 10px;
+    background: -webkit-linear-gradient( 0deg, hsla(48, 78%, 82%, 1) 0%, hsla(340, 87%, 59%, 1) 100% );
+}
+
+#ButtonChangeToRegister > input {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}
+
+/* NEW */
+.LoginErrorMessagesPanel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 96%;
+    max-width: 490px;
+    height: auto;
+    background: rgb(47, 47, 49);
+    border-radius: 10px;
+    color: white;
+}
+
+.LEMPHideButton {
+    bottom: 10px;
+    margin: auto;
+    position: relative;
+    height: 40px;
+    width: 70px;
+    background: #1a8f08;
+    border-radius: 10px;
+}
+
+.LEMPHideButton > p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    font-size: 20px;
+}
+
+.LoginErrorMessagesPanel > p {
+    margin: 10px;
+    background: inherit;
+    font-size: 20px;
+}
+
+.LEMPHideButton:hover {
+    background: #20b30a;
+}
+
+@media only screen and (max-width: 500px) {
+    .Background {
+        display: none;
+    }
+
+    .LoginRegisterMainContainer {
+        position: absolute;
+        height: 80%;
+        width: 150%;
+    }
+
+    #ButtonChangeToLogIn {
+        display: block;
+    }
+
+    #LogInFormId {
+        height: 50%;
+    }
+
+    #RegisterFormId {
+        height: 50%;
+    }
+}
