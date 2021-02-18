@@ -18,6 +18,13 @@ namespace WebAppPractice.Controllers
         }
 
         [HttpGet]
+        public IActionResult DatePractice()
+        {
+            ModelForReleaseProp model = new ModelForReleaseProp() { ReleaseDate = DateTime.Now.Date.AddDays(10) };
+            return View(model);
+        }
+
+        [HttpGet]
         public IActionResult PracticeAspForList()
         {
             var model = new PracticeAspForListViewModel()

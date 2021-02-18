@@ -1,0 +1,39 @@
+﻿@model WebAppPractice.ModelForReleaseProp
+
+
+<form method="post">
+    <input type="date" class="premiereDate" placeholder="Data" min="@DateTime.Now.AddDays(7).ToString("yyyy-MM-dd")" value="@(Model.ReleaseDate >= DateTime.Now.AddDays(7) ? Model.ReleaseDate.ToString("yyyy-MM-dd") : DateTime.Now.AddDays(7).ToString("yyyy-MM-dd"))" asp-for="ReleaseDate" onfocusout="ChangeDateEvent(this)" id="premiereDate-1">
+    <input type="submit" value="submit"/>
+</form>
+
+<script>
+    function ChangeDateEvent(e) {
+        var inputDate = Date.parse(e.value);
+        console.log(inputDate);
+        var todayPlusDate = new Date();
+        todayPlusDate.setDate(todayPlusDate.getDate() + 7);
+        console.log('' + todayPlusDate.getDate());
+        `console.log(todayPlusDate.setDate(todayPlusDate.getDate() + 7));
+        console.log('' + todayPlusDate.getFullYear());`
+        if (inputDate < todayPlusDate) {
+
+            var day = '' + todayPlusDate.getDate()
+            if (day.length < 2)
+                day = '0' + day;
+
+            var month = '' + todayPlusDate.getMonth()
+            if (month.length < 2)
+                month = '0' + month;
+
+            `console.log('day: ' + day);
+            console.log('month: ' + month);`
+
+            e.value = todayPlusDate.getFullYear() + '-' + month + '-' + day;
+
+            `console.log(todayPlusDate.getFullYear() + '-' + month + '-' + day);`
+        }
+        else {
+            console.log("OK");
+        }
+    }
+</script>

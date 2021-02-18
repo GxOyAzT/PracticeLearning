@@ -1,5 +1,11 @@
-﻿using System;
+﻿using FluentEmail.Core;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,89 +13,135 @@ namespace ConsoleUI
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public async static Task Main(string[] args)
         {
-            Task<int> methodAClassA = ClassA.MethodAClassA();
-            Task<int> methodBClassA = ClassA.MethodBClassA();
-            int y = await methodBClassA;
-            ClassC.MethodAClassC();
-            int x = await methodAClassA;
-            ClassC.MethodBClassC();
-            ClassB.MethodAClassB(x);
-        }
-    }
+            RestSharp.RestClient restClient = new RestSharp.RestClient("https://api.spotify.com/v1/artists/1x0UGhijHGBX0bhm9ulj0Y");
 
-    public class ClassA
+			restClient.Authenticator = new RestSharp.Authenticators.OAuth2AuthorizationRequestHeaderAuthenticator($"BQDIeG9W9duFov8A5jDZutwgah8ul2xuiEi00iwcUz1cQ6eEuMUTCY2ycXspZmph0M5leRLJAxz7FLuOEI0", "Bearer");
+
+			var resultRest = restClient.Execute(new RestSharp.RestRequest(), RestSharp.Method.GET);
+		}
+
+		public static string GetAuthorizationToken()
+		{
+			string url = "https://accounts.spotify.com/api/token";
+			string HtmlResult;
+			//Basic <base64 encoded client_id:client_secret>
+			//Basic ODliNTMwZTAzNmZlNGY1YjkzN2YzYTI5NDJmM2VjZjE6OTFlM2U3YTFhMmU2NGUxNzliMDEwMzEwMjk1ZGU4Yjg=
+			using (WebClient wc = new WebClient())
+			{
+				wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+				//wc.Headers["grant_type"] = "client_credentials";      BODY
+				wc.Headers["Authorization"] = "Basic ODliNTMwZTAzNmZlNGY1YjkzN2YzYTI5NDJmM2VjZjE6OTFlM2U3YTFhMmU2NGUxNzliMDEwMzEwMjk1ZGU4Yjg=";
+				HtmlResult = wc.UploadString(url, "POST", "grant_type=client_credentials");
+			}
+			var result = System.Text.Json.JsonSerializer.Deserialize<Token>(HtmlResult);
+			//check result
+			return result.AccessToken;
+		}
+	}
+
+    public class Token
     {
-        public int PropInt { get; set; }
-        public ClassB PropClassB { get; set; }
-        public List<ClassC> ClassCs { get; set; }
+        [JsonPropertyName("access_token")]
+        public string AccessToken { get; set; }
 
-        public static async Task<int> MethodAClassA()
-        {
-            Console.WriteLine("Start MethodAClassA()");
-            int count = 0;
-            await Task.Run(() =>
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    Console.WriteLine($"MethodAClassA {i}");
-                    Thread.Sleep(1000);
-                    count += 1;
-                }
-            });
-            Console.WriteLine("Stop MethodAClassA()");
-            return count;
-        }
+        [JsonPropertyName("token_type")]
+        public string TokenType { get; set; }
 
-        public static async Task<int> MethodBClassA()
-        {
-            Console.WriteLine("Start MethodBClassA()");
-            int count = 0;
-            await Task.Run(() =>
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    Console.WriteLine($"MethodBClassA {i}");
-                    Thread.Sleep(1000);
-                    count += 1;
-                }
-            });
-            Console.WriteLine("Stop MethodBClassA()");
-            return count;
-        }
+        [JsonPropertyName("expires_in")]
+        public long ExpiresIn { get; set; }
+
+        [JsonPropertyName("scope")]
+        public string Scope { get; set; }
     }
 
-    public class ClassB
-    {
-        public string PropString { get; set; }
+	//public class RestClient
+	//{
+	//	/*private readonly IHttpContextAccessor _httpContextAccessor;
+	//	public RestClient(IHttpContextAccessor httpContextAccessor) =>
+	//		_httpContextAccessor = httpContextAccessor;*/
 
-        public static void MethodAClassB(int x)
-        {
-            Console.WriteLine($"Output from MethodAClassA is {x}");
-        }
-    }
+	//	private static readonly HttpClient _client = new HttpClient();
+	//	private string _apiLink { get; set; }
+	//	public RestClient(string apiLink) => _apiLink = apiLink;
 
-    public class ClassC
-    {
-        public EnumA PropEnumA { get; set; }
+	//	public string ResponseMessage { get; set; }
+	//	public bool IsSuccessful { get; set; }
+	//	public HttpResponseMessage Response { get; set; }
 
-        public static void MethodAClassC()
-        {
-            Console.WriteLine("MethodAClassC");
-        }
 
-        public static void MethodBClassC()
-        {
-            Console.WriteLine("MethodBClassC");
-        }
-    }
+	//	/// <summary>
+	//	/// Asynchroniczne wysłanie requestu do ApiLink(appsettings.json)/endpoint 
+	//	/// </summary>
+	//	/// <param name="endpoint"></param>
+	//	/// <param name="method"></param>
+	//	/// <param name="data">String do wysłania</param>
+	//	/// <returns>Status</returns>
+	//	public async Task<bool> RequestAsync(string endpoint, HttpMethod method, string data, string senderId)
+	//		=> await makeRequest(endpoint, method, data, senderId);
 
-    public enum EnumA 
-    {
-        Prop1,
-        Prop2,
-        Prop3
-    }
+	//	/// <summary>
+	//	/// Asynchroniczne wysłanie requestu do ApiLink(appsettings.json)/endpoint 
+	//	/// </summary>
+	//	/// <param name="endpoint"></param>
+	//	/// <param name="method"></param>
+	//	/// <param name="data">Obiekt do wysłania</param>
+	//	/// <returns>Status</returns>
+	//	public async Task<bool> RequestAsync(string endpoint, HttpMethod method, object data, string senderId)
+	//		=> await makeRequest(endpoint, method, data, senderId);
 
+	//	/// <summary>
+	//	/// Asynchroniczne wysłanie requestu do ApiLink(appsettings.json)/endpoint 
+	//	/// </summary>
+	//	/// <param name="endpoint"></param>
+	//	/// <param name="method"></param>
+	//	/// <param name="data">Obiekt do wysłania (zostanie zserializowany)</param>
+	//	/// <returns>Status</returns>
+	//	public async Task<bool> RequestAsync(string endpoint, HttpMethod method, MultipartFormDataContent data, string senderId)
+	//		=> await makeRequest(endpoint, method, data, senderId);
+
+
+	//	private async Task<bool> makeRequest(string endpoint, HttpMethod method, object data, string senderId)
+	//	{
+	//		if (data is string && data as string == "")
+	//			data = null;
+	//		ResponseMessage = null;
+	//		Response = null;
+	//		IsSuccessful = false;
+
+
+	//		try
+	//		{
+	//			var uri = new Uri(_apiLink + endpoint);
+	//			Console.WriteLine(uri.ToString());
+	//			var request = new HttpRequestMessage(method, uri);
+
+	//			//var senderId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+	//			request.Headers.Add("SenderId", senderId);
+	//			if (data != null)
+	//				if (data is string)
+	//					request.Content = new StringContent(data as string, Encoding.UTF8, "application/json");
+	//				else if (data is MultipartFormDataContent)
+	//					request.Content = data as MultipartFormDataContent;
+	//				else
+	//					request.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+
+	//			Response = await _client.SendAsync(request);
+	//			ResponseMessage = await Response.Content.ReadAsStringAsync();
+
+	//			IsSuccessful = Response.IsSuccessStatusCode;
+
+	//			return true;
+	//		}
+	//		catch (HttpRequestException ex)
+	//		{
+	//			Console.WriteLine(ex.InnerException.Message);
+	//			Response = new HttpResponseMessage(System.Net.HttpStatusCode.ServiceUnavailable);
+	//			ResponseMessage = ex.Message;
+	//			return false;
+	//		}
+	//	}
+	//}
 }
