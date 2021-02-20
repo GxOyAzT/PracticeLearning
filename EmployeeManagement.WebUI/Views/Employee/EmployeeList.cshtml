@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "List of Employees";
+}
+
+<h1>Employee List</h1>
+<button id="load-button">Load</button>
+
+<div id="employee-list">
+
+</div>
+
+
+<script>
+    $('load-button').click(function () {
+        (fetch('https://localhost:44356/api1.1/employee').then(res => console.log(res)));
+    })
+    @*$('#load-button').click(function () {
+        var status;
+        var list_employees;
+        $.getJSON('@EmployeeManagement.WebUI.LocalApiHost.GetLocalHostApi()' + '/api1.1/employee', function (data) {
+            status = data.status;
+            list_employees = data.getJSON;
+        })
+        console.log(status);
+        console.log(list_employees);
+    });*@
+
+    function InsertRecordToEmployeeList() {
+
+    }
+</script>
