@@ -55,7 +55,7 @@ namespace EmployeeManagement.Api.Controllers
                 return NotFound(new ErrorMessageDTO("Incorret employee ID format.", 101));
             }
 
-            _employeeRepo.DeleteEmployee(id_guid);
+            _employeeRepo.Delete(id_guid);
 
             return Ok();
         }
