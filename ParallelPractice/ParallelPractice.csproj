@@ -5,4 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeeManagement.DataModel\EmployeeManagement.DataModel.csproj" />
+  </ItemGroup>
+
 </Project>
