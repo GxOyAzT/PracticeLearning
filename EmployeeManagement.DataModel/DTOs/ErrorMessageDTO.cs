@@ -10,7 +10,7 @@
 
         public ErrorMessageDTO() { }
 
-        public string ErrorMessage { get; private set; }
-        public int InternalErrorCode { get; private set; }
+        public string ErrorMessage { get; set; }
+        public int InternalErrorCode { get; set; }
     }
 }

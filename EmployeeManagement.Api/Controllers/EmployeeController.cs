@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
-using EmployeeManagement.DatabaseManager;
+using EmployeeManagement.DataAccess;
 using EmployeeManagement.DataModel;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EmployeeManagement.Api.Controllers
 {
@@ -26,36 +27,59 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<EmployeeBasicDTO>> GetEmployees()
+        public IActionResult GetEmployees()
         {
             return Ok(_mapper.Map<IEnumerable<EmployeeBasicDTO>>(_employeeRepo.Get()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult <EmployeeBasicDTO> GetEmployeeById(string id)
+        public IActionResult GetEmployeeById(string id)
         {
-            return Ok(_mapper.Map<EmployeeBasicDTO>(_employeeRepo.Get().FirstOrDefault(e => e.Id == Guid.Parse(id))));
+            Guid employeeId;
+
+            if (!Guid.TryParse(id, out employeeId))
+            {
+                var error = new ErrorMessageDTO("Cannot convert id", 101);
+                return BadRequest(error);
+            }
+
+            var employeeDTO = _employeeRepo.Get(employeeId);
+
+            if (employeeDTO == null)
+            {
+                var error = new ErrorMessageDTO($"Cannot find user of id {id}", 101);
+                return BadRequest(error);
+            }
+
+            return Ok(_mapper.Map<EmployeeBasicDTO>(employeeDTO));
         }
 
         [HttpPost]
-        public ActionResult InsertNewEmployee(EmployeeBasicDTO modelDTO)
+        public IActionResult InsertNewEmployee([FromBody] EmployeeBasicDTO modelDTO)
         {
             var employee = _mapper.Map<EmployeeModel>(modelDTO);
-            employee.Id = Guid.NewGuid();
-            _employeeRepo.Insert(employee);
-            return Ok();
+
+            if (String.IsNullOrWhiteSpace(modelDTO.FullName))
+            {
+                var error = new ErrorMessageDTO("FullName property cannot be null or empty", 201);
+                return BadRequest(error);
+            }
+
+            var returnEmployee = _employeeRepo.Insert(employee);
+
+            return Ok(_mapper.Map<EmployeeBasicDTO>(returnEmployee));
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteEmployee(string id)
+        public IActionResult DeleteEmployee(string id)
         {
-            Guid id_guid;
-            if (Guid.TryParse(id, out id_guid))
-            {
-                return NotFound(new ErrorMessageDTO("Incorret employee ID format.", 101));
-            }
+            Guid employeeId;
 
-            _employeeRepo.Delete(id_guid);
+            if (!Guid.TryParse(id, out employeeId))
+                return BadRequest(new ErrorMessageDTO("Incorret employee id format", 101));
+
+            if (!_employeeRepo.Delete(employeeId))
+                return NotFound(new ErrorMessageDTO($"Cannot find user of id {id}", 101));
 
             return Ok();
         }
