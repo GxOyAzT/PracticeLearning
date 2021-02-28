@@ -32,6 +32,22 @@ namespace WebAppPractice.Controllers
 
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Download(string id)
+        {
+            var path = Path.Combine(
+                     Directory.GetCurrentDirectory(),
+                     "wwwroot\\userImages", "e33aa0ea-5df0-4590-9f5e-d3c1cda353ac.jpg");
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, "image/jpeg", Path.GetFileName(path));
+        }
     }
 
     public class ImageDTO
