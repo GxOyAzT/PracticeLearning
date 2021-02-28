@@ -1,0 +1,6 @@
+﻿@model WebAppPractice.Controllers.ImageDTO
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="@Model.File" type="file"/>
+    <input type="submit" asp-action="Insert"/>
+</form>
