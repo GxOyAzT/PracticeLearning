@@ -9,5 +9,10 @@ namespace ClassLibrary.ManyToManyPractice
         public string Name { get; set; }
 
         public ICollection<TrackModel> TrackModels { get; set; }
+        
+        public void SayYourName()
+        {
+            Console.WriteLine($"Hi I'm {Name}");
+        }
     }
 }
