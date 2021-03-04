@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace EmployeeManagement.WebUI.Controllers
 {
@@ -10,6 +11,12 @@ namespace EmployeeManagement.WebUI.Controllers
         }
 
         public IActionResult EmployeeList()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult EmployeeA()
         {
             return View();
         }

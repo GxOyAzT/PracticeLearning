@@ -25,7 +25,7 @@ namespace EmployeeManagement.Api
                 options.AddPolicy("FirstPolicy",
                     builder =>
                     {
-                        builder.WithOrigins("http://127.0.0.1:5500")
+                        builder.WithOrigins("https://localhost:44374")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                     });
