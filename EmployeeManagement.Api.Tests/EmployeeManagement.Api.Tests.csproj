@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EmployeeManagement.Api\EmployeeManagement.Api.csproj" />
+    <ProjectReference Include="..\EmployeeManagement.TestsMockData\EmployeeManagement.TestsMockData.csproj" />
   </ItemGroup>
 
 </Project>

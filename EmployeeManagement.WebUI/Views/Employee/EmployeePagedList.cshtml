@@ -1,0 +1,254 @@
+﻿<h1>Employee List Paged</h1>
+
+<div id="list-employees">
+    
+</div>
+<div id="list-pages">
+    
+</div>
+
+<div id="alert" onmouseover="hideAlert()">
+    
+</div>
+
+<div id="confirmation-panel">
+    <div id="confirmation-panel-message"></div>
+    <br />
+    <div id="confirmation-panel-buttons">
+        
+    </div>
+</div>
+
+<script>
+    const url = 'https://localhost:44363';
+    const interval = 3;
+    var totalEmployeeCount = 0;
+    var allPages = 0;
+    var employees;
+    var actualPage = 1;
+
+    async function getEmployeeCount() {
+        const arguments = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+
+        ret = await fetch(url + `/api1.1/EmployeeExtension/Count`, arguments)
+            .then(response => response.json());
+
+        totalEmployeeCount = ret.totalEmployee;
+    }
+
+    function calculatePagesCount() {
+        allPages = Math.ceil(totalEmployeeCount / interval);
+    }
+
+    async function getEmployeesForPage(page) {
+        const arguments = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+
+        ret = await fetch(url + `/api1.1/EmployeeExtension/GetEmployeePaged?page=${page}&count=${interval}`, arguments)
+            .then(response => response.json());
+
+        employees = ret;
+    }
+
+    async function changePage(page) {
+        actualPage = page;
+        await getEmployeesForPage(page);
+        createEmployeeRecords();
+    }
+
+    function createPageButtons(pagesCount) {
+        document.getElementById('list-pages').innerHTML = ``;
+        innerHTML = ``;
+        for (i = 1; i <= pagesCount; i++) {
+            innerHTML += `<button onclick="changePage(${i})">${i}</button>`;
+        }
+        document.getElementById('list-pages').innerHTML = innerHTML;
+    }
+
+    function createEmployeeRecords() {
+        document.getElementById('list-employees').innerHTML = ``;
+        innerHTML = ``;
+        for (var i in employees) {
+            var row = employees[i];
+            innerHTML += `
+    <div class="record-employee">
+        <p class="record-employee-id">${row.id}</p>
+        <input id="record-employee-fullName-${row.id}" class="record-employee-fullName" value="${row.fullName}"/>
+        <input id="record-employee-dateOfBirth-${row.id}" type="date" value="${row.dateOfBirth.substring(0, 10)}"/>
+        <input id="record-employee-salary-${row.id}" value="${row.salary}"/>
+        <button onclick="showDeleteConfirmationPanel('${row.id}')">Delete</button>
+        <button onclick="updateEmployeeClick('${row.id}')">Update</button>
+    </div>`;
+        }
+        document.getElementById('list-employees').innerHTML = innerHTML;
+    }
+
+    function showDeleteConfirmationPanel(id) {
+        showConfirmationPanel(`Are you sure you want to delete this employee?`, `deleteEmployeeClick('${id}')`, `hideConfirmationPanel()`);
+    }
+
+    async function deleteEmployeeClick(id) {
+        hideConfirmationPanel();
+        await deleteEmployee(id);
+
+        await getEmployeeCount();
+        calculatePagesCount();
+        createPageButtons(allPages);
+        await getEmployeesForPage(actualPage);
+        createEmployeeRecords();
+    }
+
+    async function deleteEmployee(id) {
+        const arguments = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+
+        await fetch(url + `/api1.1/Employee/${id}`, arguments)
+            .then(response => {
+                if (response.status === 200) {
+                    showAlert('success', "Delete completed successfully.");
+                }
+                else if (response.status === 400) {
+                    showAlert('error', "This employee does not exists in database.");
+                }
+                else {
+                    showAlert('error', "An error occured.");
+                }
+            });
+    }
+
+    async function updateEmployeeClick(id) {
+        var updateEmp = {
+            id: id,
+            fullName: document.getElementById(`record-employee-fullName-${id}`).value,
+            dateOfBirth: document.getElementById(`record-employee-dateOfBirth-${id}`).value,
+            salary: document.getElementById(`record-employee-salary-${id}`).value
+        };
+
+        await updateEmployee(JSON.stringify(updateEmp))
+    }
+
+    async function updateEmployee(employeeJsonData) {
+        const arguments = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: employeeJsonData
+        };
+
+        await fetch(url + `/api1.1/Employee/`, arguments);
+    }
+
+    async function loadPage() {
+        await getEmployeeCount();
+        calculatePagesCount();
+        createPageButtons(allPages);
+        await getEmployeesForPage(actualPage);
+        createEmployeeRecords();
+    }
+
+    async function showAlert(messageType, message) {
+        if (messageType == "error") {
+            document.getElementById('alert').style.background = "#ED5E6F";
+        }
+        else if (messageType == "success") {
+            document.getElementById('alert').style.background = "#A6EE8B";
+        }
+        else {
+            document.getElementById('alert').style.background = "wheat";
+        }
+
+        document.getElementById('alert').innerHTML = `<p>${message}</p>`;
+        document.getElementById('alert').style.transform = 'translate(-50%, 10%)';
+
+        await sleep(10000);
+
+        document.getElementById('alert').style.transform = 'translate(-50%, -110%)';
+    }
+
+    async function hideAlert() {
+        document.getElementById('alert').style.transform = 'translate(-50%, -110%)';
+    }
+
+    async function showConfirmationPanel(message, buttonYesEvent, buttonNoEvent) {
+        document.getElementById('confirmation-panel').style.display = 'block';
+        document.getElementById('confirmation-panel-message').innerHTML = `<p>${message}</p>`;
+        document.getElementById('confirmation-panel-message').innerHTML = `<button onclick="${buttonYesEvent}">Confirm</button><button onclick="${buttonNoEvent}">Cancel</button>`;
+    }
+
+    async function hideConfirmationPanel() {
+        document.getElementById('confirmation-panel-message').innerHTML = ``;
+        document.getElementById('confirmation-panel-message').innerHTML = ``;
+        document.getElementById('confirmation-panel').style.display = 'none';
+    }
+
+    loadPage();
+
+    function sleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+</script>
+
+<style>
+    #list-employees {
+        position: relative;
+        min-height: 90%;
+    }
+
+    .record-employee {
+        position: relative;
+        width: calc(100% - 20px);
+        margin: 10px;
+        padding: 5px;
+        border: 1px solid black;
+    }
+
+    .record-employee-id {
+        position: relative;
+        width: 20%;
+        min-width: 250px;
+        display: inline;
+    }
+
+    .record-employee-fullName {
+        position: relative;
+        width: 20%;
+        min-width: 250px;
+        display: inline;
+    }
+
+    #alert {
+        top: 0px;
+        height: 100px;
+        width: 400px;
+        background: wheat;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%, -110%);
+        transition: transform 2s;
+    }
+
+    #confirmation-panel {
+        display: none;
+        height: 100px;
+        width: 400px;
+        background: wheat;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>

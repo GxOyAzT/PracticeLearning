@@ -20,5 +20,11 @@ namespace EmployeeManagement.WebUI.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult EmployeePagedList()
+        {
+            return View();
+        }
     }
 }

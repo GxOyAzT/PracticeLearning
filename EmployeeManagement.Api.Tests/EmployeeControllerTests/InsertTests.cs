@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.Api.Tests.InitializeDatabase;
+﻿using EmployeeManagement.TestsMockData;
 using EmployeeManagement.DataAccess;
 using EmployeeManagement.DataModel;
 using Microsoft.AspNetCore.TestHost;

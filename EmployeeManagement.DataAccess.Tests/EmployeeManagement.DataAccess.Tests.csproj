@@ -19,4 +19,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeeManagement.DataAccess\EmployeeManagement.DataAccess.csproj" />
+    <ProjectReference Include="..\EmployeeManagement.TestsMockData\EmployeeManagement.TestsMockData.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
-﻿using EmployeeManagement.Api.Tests.InitializeDatabase;
-using EmployeeManagement.DataAccess;
+﻿using EmployeeManagement.DataAccess;
 using EmployeeManagement.DataModel;
+using EmployeeManagement.TestsMockData;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
 using Newtonsoft.Json;
+
 
 namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
 {

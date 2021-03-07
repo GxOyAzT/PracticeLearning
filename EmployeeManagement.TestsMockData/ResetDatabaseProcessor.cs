@@ -1,7 +1,7 @@
 ﻿using EmployeeManagement.DataAccess;
 using System.Linq;
 
-namespace EmployeeManagement.Api.Tests.InitializeDatabase
+namespace EmployeeManagement.TestsMockData
 {
     public class ResetDatabaseProcessor
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EmployeeManagement.Api.Tests.InitializeDatabase
+namespace EmployeeManagement.TestsMockData
 {
     public class HardcodedDataV1 : IHardcodedData
     {

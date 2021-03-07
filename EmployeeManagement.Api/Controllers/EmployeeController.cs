@@ -83,5 +83,19 @@ namespace EmployeeManagement.Api.Controllers
 
             return Ok();
         }
+
+        [HttpPut]
+        public IActionResult UpdateEmployee([FromBody] EmployeeBasicDTO modelDTO)
+        {
+            if (modelDTO == null)
+                return BadRequest();
+
+            if (_employeeRepo.Get(modelDTO.Id) == null)
+                return NotFound();
+
+            _employeeRepo.Update(_mapper.Map<EmployeeModel>(modelDTO));
+
+            return Ok();
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using EmployeeManagement.DataModel;
 using System.Collections.Generic;
 
-namespace EmployeeManagement.Api.Tests.InitializeDatabase
+namespace EmployeeManagement.TestsMockData
 {
     public interface IHardcodedData
     {

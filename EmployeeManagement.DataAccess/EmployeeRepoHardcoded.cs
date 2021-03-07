@@ -46,5 +46,20 @@ namespace EmployeeManagement.DataAccess
         {
             throw new NotImplementedException();
         }
+
+        public int Count()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<EmployeeModel> GetPaged(int count, int page)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(EmployeeModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
