@@ -9,6 +9,7 @@ namespace EmployeeManagement.DataAccess
         : base(options)
         {
         }
+
         public ApplicationDataContext()
         {
 
@@ -20,6 +21,7 @@ namespace EmployeeManagement.DataAccess
         }
 
         public DbSet<EmployeeModel> EmployeeModels { get; set; }
-        public DbSet<DepartmentModel> Deparemtnt { get; set; }
+        public DbSet<DepartmentModel> Departments { get; set; }
+        public DbSet<AddressModel> AddressModels { get; set; }
     }
 }

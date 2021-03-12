@@ -2,17 +2,16 @@
 using EmployeeManagement.DataAccess;
 using EmployeeManagement.DataModel;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EmployeeManagement.Api.Controllers
 {
     [ApiController]
     [Route("api1.1/[controller]")]
-    [EnableCors("FirstPolicy")]
+    [EnableCors("Open")]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepo _employeeRepo;
@@ -96,6 +95,36 @@ namespace EmployeeManagement.Api.Controllers
             _employeeRepo.Update(_mapper.Map<EmployeeModel>(modelDTO));
 
             return Ok();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult UpdatePartial(string id, [FromBody] JsonPatchDocument<EmployeeBasicDTO> patchModel)
+        {
+            Guid employeeId;
+
+            if (!Guid.TryParse(id, out employeeId))
+            {
+                return BadRequest();
+            }
+
+            var employee = _employeeRepo.Get(employeeId);
+
+            var employeeDTO = _mapper.Map<EmployeeBasicDTO>(employee);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            patchModel.ApplyTo(employeeDTO);
+
+            var employeeToUpdate = _mapper.Map<EmployeeModel>(employeeDTO);
+
+            employeeToUpdate.DepartmentModelId = employee.DepartmentModelId;
+
+            _employeeRepo.Update(employeeToUpdate);
+
+            return Ok(employeeDTO);
         }
     }
 }

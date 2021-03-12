@@ -4,28 +4,29 @@
     
 </div>
 <div id="list-pages">
-    
+
 </div>
 
 <div id="alert" onmouseover="hideAlert()">
-    
+
 </div>
 
 <div id="confirmation-panel">
     <div id="confirmation-panel-message"></div>
     <br />
     <div id="confirmation-panel-buttons">
-        
+
     </div>
 </div>
 
 <script>
-    const url = 'https://localhost:44363';
+    const url = 'https://localhost:2001';
     const interval = 3;
     var totalEmployeeCount = 0;
     var allPages = 0;
     var employees;
     var actualPage = 1;
+    var departments;
 
     async function getEmployeeCount() {
         const arguments = {
@@ -81,12 +82,17 @@
             var row = employees[i];
             innerHTML += `
     <div class="record-employee">
-        <p class="record-employee-id">${row.id}</p>
         <input id="record-employee-fullName-${row.id}" class="record-employee-fullName" value="${row.fullName}"/>
         <input id="record-employee-dateOfBirth-${row.id}" type="date" value="${row.dateOfBirth.substring(0, 10)}"/>
-        <input id="record-employee-salary-${row.id}" value="${row.salary}"/>
+        <input class="record-employee-salary" id="record-employee-salary-${row.id}" value="${row.salary}"/>
         <button onclick="showDeleteConfirmationPanel('${row.id}')">Delete</button>
         <button onclick="updateEmployeeClick('${row.id}')">Update</button>
+        <button onclick="clickDepartmentPanel('${row.id}')">Department</button>
+        <button onclick="clickAddressPanel('${row.id}')">Addresses</button>
+        <button onclick="clickHidePanel('${row.id}')">Hide</button>
+        <div class="record-employee-extensionContainer" id="record-employee-extensionContainer-${row.id}">
+
+        </div>
     </div>`;
         }
         document.getElementById('list-employees').innerHTML = innerHTML;
@@ -95,7 +101,7 @@
     function showDeleteConfirmationPanel(id) {
         showConfirmationPanel(`Are you sure you want to delete this employee?`, `deleteEmployeeClick('${id}')`, `hideConfirmationPanel()`);
     }
-
+    
     async function deleteEmployeeClick(id) {
         hideConfirmationPanel();
         await deleteEmployee(id);
@@ -152,14 +158,6 @@
         await fetch(url + `/api1.1/Employee/`, arguments);
     }
 
-    async function loadPage() {
-        await getEmployeeCount();
-        calculatePagesCount();
-        createPageButtons(allPages);
-        await getEmployeesForPage(actualPage);
-        createEmployeeRecords();
-    }
-
     async function showAlert(messageType, message) {
         if (messageType == "error") {
             document.getElementById('alert').style.background = "#ED5E6F";
@@ -195,11 +193,187 @@
         document.getElementById('confirmation-panel').style.display = 'none';
     }
 
+    function clickDepartmentPanel(id) {
+        if (document.getElementById(`record-employee-departmentContainer-${id}`).style.display == 'block')
+            document.getElementById(`record-employee-departmentContainer-${id}`).style.display = 'none';
+        else
+            document.getElementById(`record-employee-departmentContainer-${id}`).style.display = 'block';
+    }
+
+    async function getDepartments() {
+        departments = await fetch(url + '/api1.1/department')
+            .then(response => response.json());
+    }
+
+    function createSelectForDepartments(id) {
+        let departmentsInnerHtml = `<select id="select-department-${id}">`;
+
+        for (var i in departments) {
+            var option = departments[i];
+            departmentsInnerHtml += `<option value="${option.id}">${option.name}</option>`;
+        }
+
+        departmentsInnerHtml += `</select>`;
+
+        return departmentsInnerHtml;
+    }
+
+    function updateEmployeeDepartment(id) {
+        console.log(document.getElementById(`select-department-${id}`).value);
+    }
+
+    async function clickAddressPanel(id) {
+        let addresses = await getAddressesForEmployee(id);
+        await generateAddressesPanel(id, addresses);
+    }
+
+    async function getAddressesForEmployee(id) {
+        return await fetch(url + `/api1.1/addressextension/GetEmployeeAddresses?employeeId=${id}`)
+            .then(response => response.json());
+    }
+
+    async function generateAddressesPanel(id, addresses) {
+        var innerHTML = ``;
+
+        for (var i in addresses) {
+            innerHTML += `<br/>`
+            innerHTML += createAddressPanel(addresses[i], i);
+        }
+
+
+        innerHTML += `<br/><div id="address-new-${id}"><button onclick="createAddressNew('${id}')">New</button></div>`
+        let container = document.getElementById(`record-employee-extensionContainer-${id}`)
+        container.innerHTML = innerHTML;
+        //container.style.display = "block";
+    }
+
+    async function loadPage() {
+        await getDepartments();
+        await getEmployeeCount();
+        calculatePagesCount();
+        createPageButtons(allPages);
+        await getEmployeesForPage(actualPage);
+        createEmployeeRecords();
+    }
+
     loadPage();
 
     function sleep(time) {
         return new Promise((resolve) => setTimeout(resolve, time));
     }
+
+    function createAddressPanel(data = null, iterator = -1) {
+        return `<div class="address-wrapper">
+            <h6>Address ${iterator == -1 ? '' : parseInt(iterator) + 1}</h6 >
+            <div class="address-wrapper-property">
+                <label>City</label>
+                <br />
+                <input value="${data.city}" id="address-city-${data.id}" />
+            </div>
+            <div class="address-wrapper-property">
+                <label>Street</label>
+                <br />
+                <input value="${data.street}" id="address-street-${data.id}" />
+            </div>
+            <div class="address-wrapper-property">
+                <label>Zip Code</label>
+                <br />
+                <input value="${data.zipCode}" id="address-zipcode-${data.id}" />
+            </div>
+            <div class="address-wrapper-property">
+                <button onclick="addressUpdate(${data.id})">Update</button>
+                <button onclick="clickAddressDelete('${data.id}', '${data.employeeModelId}')">Delete</button>
+            </div>
+        </div>`
+    }
+
+    function clickHidePanel(id) {
+        document.getElementById(`record-employee-extensionContainer-${id}`).innerHTML = ``;
+    }
+
+    function createAddressNew(id) {
+        document.getElementById(`address-new-${id}`).innerHTML = `<br/><div class="address-wrapper">
+            <h6>Address (New)</h6 >
+            <div class="address-wrapper-property">
+                <label>City</label>
+                <br />
+                <input id="address-city-new-${id}" />
+            </div>
+            <div class="address-wrapper-property">
+                <label>Street</label>
+                <br />
+                <input id="address-street-new-${id}" />
+            </div>
+            <div class="address-wrapper-property">
+                <label>Zip Code</label>
+                <br />
+                <input id="address-zipcode-new-${id}" />
+            </div>
+            <div class="address-wrapper-property">
+                <button onclick="addressSaveNew('${id}')">Save</button>
+            </div>
+        </div>`;
+    }
+
+    async function addressSaveNew(id) {
+        await postAddress(id);
+        await clickAddressPanel(id);
+    }
+
+    async function postAddress(id) {
+        const arguments = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                employeeModelId: id,
+                city: document.getElementById(`address-city-new-${id}`).value,
+                street: document.getElementById(`address-street-new-${id}`).value,
+                zipCode: document.getElementById(`address-zipcode-new-${id}`).value
+            })
+        };
+
+        await fetch(url + '/api1.1/address', arguments);
+    }
+
+    async function clickAddressDelete(addressId, id) {
+        if (!(await deleteAddress(addressId))) {
+            return;
+        }
+        await clickAddressPanel(id);
+    }
+
+    async function deleteAddress(addressId) {
+        const arguments = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: addressId
+            })
+        }
+
+        await fetch(url + `/api1.1/Address`, arguments)
+            .then(response => {
+                console.log(response);
+                console.log(response.status);
+                if (response.status === 200) {
+                    showAlert('success', "Delete completed successfully.");
+                }
+                else {
+                    showAlert('error', "An error occured.");
+                }
+                return true;
+            })
+            .catch(error =>
+            {
+                showAlert('error', "Cannot dowland data. Check your internet connection. This may be server problem.");
+                return false;
+            });
+    }
+    
 </script>
 
 <style>
@@ -226,8 +400,12 @@
     .record-employee-fullName {
         position: relative;
         width: 20%;
-        min-width: 250px;
+        min-width: 200px;
         display: inline;
+    }
+
+    .record-employee-salary {
+        width: 150px;
     }
 
     #alert {
@@ -251,4 +429,18 @@
         top: 50%;
         transform: translate(-50%, -50%);
     }
+
+    .address-wrapper {
+        border: 1px solid black;
+        padding: 3px;
+    }
+
+    .address-wrapper-property {
+        position: relative;
+        display: inline-block;
+    }
 </style>
+
+@*<br />
+                ${createSelectForDepartments(`${row.id}`)}
+    <button onclick="updateEmployeeDepartment('${row.id}')">Update Department</button>*@

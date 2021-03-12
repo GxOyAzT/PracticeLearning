@@ -7,5 +7,6 @@ namespace EmployeeManagement.TestsMockData
     {
         List<DepartmentModel> GetDepartments();
         List<EmployeeModel> GetEmployees();
+        List<AddressModel> GetAddressModels();
     }
 }

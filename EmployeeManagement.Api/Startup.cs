@@ -22,25 +22,29 @@ namespace EmployeeManagement.Api
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("FirstPolicy",
+                options.AddPolicy("Open",
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44374")
-                                            .AllowAnyHeader()
-                                            .AllowAnyMethod();
+                        builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                     });
             });
 
-            services.AddDbContext<EmployeeManagement.DataAccess.ApplicationDataContext>(options =>
+            services.AddDbContext<ApplicationDataContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ApplicationDatabaseTest"));
             });
 
             services.AddSingleton<IEmployeeRepo, EmployeeRepo>();
+            services.AddSingleton<IDepartmentRepo, DepartmentRepo>();
+            services.AddSingleton<IAddressRepo, AddressRepo>();
 
             services.AddAutoMapper(e => e.AddProfile<EmployeeProfile>());
+            services.AddAutoMapper(e => e.AddProfile<DepartmentProfile>());
+            services.AddAutoMapper(e => e.AddProfile<AddressProfile>());
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)

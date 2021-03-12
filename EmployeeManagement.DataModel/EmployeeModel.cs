@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EmployeeManagement.DataModel
 {
@@ -10,7 +11,9 @@ namespace EmployeeManagement.DataModel
         public double Salary { get; set; }
         public Gender Gender { get; set; }
 
-        public Guid DepartmentId { get; set; }
+        public Guid DepartmentModelId { get; set; }
         public DepartmentModel DepartmentModel { get; set; }
+
+        public List<AddressModel> AddressModels { get; set; }
     }
 }

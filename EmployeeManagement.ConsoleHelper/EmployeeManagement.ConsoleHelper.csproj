@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EmployeeManagement.DataAccess\EmployeeManagement.DataAccess.csproj" />
+    <ProjectReference Include="..\EmployeeManagement.DataModel\EmployeeManagement.DataModel.csproj" />
+    <ProjectReference Include="..\EmployeeManagement.TestsMockData\EmployeeManagement.TestsMockData.csproj" />
   </ItemGroup>
 
 </Project>

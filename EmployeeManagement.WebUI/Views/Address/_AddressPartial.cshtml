@@ -1,0 +1,37 @@
+﻿@model AddressBasicDTO
+
+<div class="address-wrapper">
+    <h6>Address</h6>
+    <div class="address-wrapper-property">
+        <label>City</label>
+        <br />
+        <input type="text" asp-for="@Model.City" id="address-city-@Model.Id" />
+    </div>
+    <div class="address-wrapper-property">
+        <label>Street</label>
+        <br />
+        <input type="text" asp-for="@Model.Street" id="address-street-@Model.Id" />
+    </div>
+    <div class="address-wrapper-property">
+        <label>Zip Code</label>
+        <br />
+        <input type="text" asp-for="@Model.ZipCode" id="address-zipcode-@Model.Id" />
+    </div>
+    <div class="address-wrapper-property">
+        <button onclick="AddressUpdate(@Model.Id)">Update</button>
+        <br />
+        <button onclick="AddressDelete(@Model.Id)">Delete</button>
+    </div>
+</div>
+
+<style>
+    .address-wrapper{
+        border: 1px solid black;
+        padding: 3px;
+    }
+
+    .address-wrapper-property{
+        position: relative;
+        display: inline-block;
+    }
+</style>

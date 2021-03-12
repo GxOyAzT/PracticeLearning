@@ -16,12 +16,16 @@ namespace EmployeeManagement.TestsMockData
         {
             using (var db = new ApplicationDataContext())
             {
+                db.AddressModels.RemoveRange(db.AddressModels.ToList());
                 db.EmployeeModels.RemoveRange(db.EmployeeModels.ToList());
-                db.Deparemtnt.RemoveRange(db.Deparemtnt.ToList());
+                db.Departments.RemoveRange(db.Departments.ToList());
+                db.SaveChanges();
 
-                db.Deparemtnt.AddRange(_hardcodedData.GetDepartments());
+                db.Departments.AddRange(_hardcodedData.GetDepartments());
+                db.SaveChanges();
                 db.EmployeeModels.AddRange(_hardcodedData.GetEmployees());
-
+                db.SaveChanges();
+                db.AddressModels.AddRange(_hardcodedData.GetAddressModels());
                 db.SaveChanges();
             }
         }

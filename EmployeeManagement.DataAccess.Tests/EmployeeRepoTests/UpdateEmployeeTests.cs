@@ -19,7 +19,7 @@ namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
                 Gender = Gender.Male,
                 Salary = 1000.00,
                 DateOfBirth = new DateTime(1965, 12, 31),
-                DepartmentId = Guid.Parse("e244600a-a289-40f8-976d-e4a5a6f91edd"),
+                DepartmentModelId = Guid.Parse("e244600a-a289-40f8-976d-e4a5a6f91edd"),
                 FullName = "FullName Cc"
             };
 
