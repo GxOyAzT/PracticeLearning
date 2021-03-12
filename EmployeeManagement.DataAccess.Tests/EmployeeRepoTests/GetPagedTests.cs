@@ -13,7 +13,7 @@ namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
         {
             InitializeDatabase(new HardcodedDataV2());
 
-            IEmployeeRepo _employeeRepo = new EmployeeRepo();
+            IEmployeeRepo _employeeRepo = new EmployeeRepo(new ApplicationDataContextFactory());
 
             var ret = _employeeRepo.GetPaged(3, 2);
 
@@ -28,7 +28,7 @@ namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
         {
             InitializeDatabase(new HardcodedDataV2());
 
-            IEmployeeRepo _employeeRepo = new EmployeeRepo();
+            IEmployeeRepo _employeeRepo = new EmployeeRepo(new ApplicationDataContextFactory());
 
             var ret = _employeeRepo.GetPaged(3, 3);
 
@@ -41,7 +41,7 @@ namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
         {
             InitializeDatabase(new HardcodedDataV2());
 
-            IEmployeeRepo _employeeRepo = new EmployeeRepo();
+            IEmployeeRepo _employeeRepo = new EmployeeRepo(new ApplicationDataContextFactory());
 
             var ret = _employeeRepo.GetPaged(3, 1);
 
@@ -53,7 +53,7 @@ namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
 
         static void InitializeDatabase(IHardcodedData hardcodedData)
         {
-            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData);
+            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData, new ApplicationDataContextFactory().Build());
             resetDatabaseProcessor.Reset();
         }
     }

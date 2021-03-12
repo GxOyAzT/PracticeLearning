@@ -11,6 +11,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using EmployeeManagement.Api.Data;
 
 namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
 {
@@ -19,39 +22,21 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
     {
         private readonly HttpClient _client;
 
-        public InsertTests(CustomWebApplicationFactory<Startup> factory)
+        public InsertTests(CustomWebApplicationFactory<EmployeeManagement.Api.Startup> factory)
         {
             _client = factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddDbContext<ApplicationDataContext>(options =>
-                    {
-                        options.UseSqlServer(GetTestDatabaseConnection.GetConnection());
-                    });
-
-                    services.AddCors(options =>
-                    {
-                        options.AddPolicy("FirstPolicy",
-                            builder =>
-                            {
-                                builder.WithOrigins("http://127.0.0.1:5500")
-                                                    .AllowAnyHeader()
-                                                    .AllowAnyMethod();
-                            });
-                    });
-
-                    services.AddAutoMapper(e => e.AddProfile<EmployeeProfile>());
-
-                    services.AddControllers();
+                    services.AddSingleton<IApplicationDataContextFactory, ApplicationDataContextFactoryTests>();
                 });
-            }).CreateClient();
+            }).CreateClient(new WebApplicationFactoryClientOptions());
         }
 
         [Fact]
         public async Task TestA()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var inputModel = new EmployeeBasicDTO()
@@ -59,7 +44,8 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
                 DateOfBirth = DateTime.Now.Date.AddDays(10),
                 Salary = 5000,
                 FullName = "FullName - 4",
-                Gender = Gender.Female
+                Gender = Gender.Female,
+                DepartmentModelId = Guid.Parse("b1f13d06-7963-4b72-8103-56efb96c02dc")
             };
 
             var response = await _client.PostAsync("/api1.1/employee", new StringContent(JsonConvert.SerializeObject(inputModel), Encoding.UTF8, "application/json"));
@@ -72,7 +58,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
             Assert.Equal("FullName - 4", returnModel.FullName);
             Assert.NotEqual(Guid.Empty, returnModel.Id);
 
-            using (var db = new ApplicationDataContext())
+            using (var db = new ApplicationDataContextFactoryTests().Build())
             {
                 Assert.Equal(4, await db.EmployeeModels.CountAsync());
                 Assert.NotNull(await db.EmployeeModels.FirstOrDefaultAsync(e => e.Id == returnModel.Id));
@@ -82,7 +68,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
         [Fact]
         public async Task TestB()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var inputModel = new EmployeeBasicDTO()
@@ -103,7 +89,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
             Assert.Equal("FullName property cannot be null or empty", returnModel.ErrorMessage);
             Assert.Equal(201, returnModel.InternalErrorCode);
 
-            using (var db = new ApplicationDataContext())
+            using (var db = new ApplicationDataContextFactoryTests().Build())
             {
                 Assert.Equal(3, await db.EmployeeModels.CountAsync());
             }

@@ -11,5 +11,6 @@ namespace EmployeeManagement.DataModel
         public DateTime DateOfBirth { get; set; }
         public double Salary { get; set; }
         public Gender Gender { get; set; }
+        public Guid DepartmentModelId { get; set; }
     }
 }

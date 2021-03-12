@@ -6,28 +6,27 @@ namespace EmployeeManagement.TestsMockData
     public class ResetDatabaseProcessor
     {
         private readonly IHardcodedData _hardcodedData;
+        private readonly ApplicationDataContext _context;
 
-        public ResetDatabaseProcessor(IHardcodedData hardcodedData)
+        public ResetDatabaseProcessor(IHardcodedData hardcodedData, ApplicationDataContext context)
         {
             _hardcodedData = hardcodedData;
+            _context = context;
         }
 
         public void Reset()
         {
-            using (var db = new ApplicationDataContext())
-            {
-                db.AddressModels.RemoveRange(db.AddressModels.ToList());
-                db.EmployeeModels.RemoveRange(db.EmployeeModels.ToList());
-                db.Departments.RemoveRange(db.Departments.ToList());
-                db.SaveChanges();
+            _context.AddressModels.RemoveRange(_context.AddressModels.ToList());
+            _context.EmployeeModels.RemoveRange(_context.EmployeeModels.ToList());
+            _context.Departments.RemoveRange(_context.Departments.ToList());
+            _context.SaveChanges();
 
-                db.Departments.AddRange(_hardcodedData.GetDepartments());
-                db.SaveChanges();
-                db.EmployeeModels.AddRange(_hardcodedData.GetEmployees());
-                db.SaveChanges();
-                db.AddressModels.AddRange(_hardcodedData.GetAddressModels());
-                db.SaveChanges();
-            }
+            _context.Departments.AddRange(_hardcodedData.GetDepartments());
+            _context.SaveChanges();
+            _context.EmployeeModels.AddRange(_hardcodedData.GetEmployees());
+            _context.SaveChanges();
+            _context.AddressModels.AddRange(_hardcodedData.GetAddressModels());
+            _context.SaveChanges();
         }
     }
 }

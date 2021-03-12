@@ -31,14 +31,10 @@ namespace EmployeeManagement.Api
                     });
             });
 
-            services.AddDbContext<ApplicationDataContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDatabaseTest"));
-            });
-
             services.AddSingleton<IEmployeeRepo, EmployeeRepo>();
             services.AddSingleton<IDepartmentRepo, DepartmentRepo>();
             services.AddSingleton<IAddressRepo, AddressRepo>();
+            services.AddSingleton<IApplicationDataContextFactory, ApplicationDataContextFactory>();
 
             services.AddAutoMapper(e => e.AddProfile<EmployeeProfile>());
             services.AddAutoMapper(e => e.AddProfile<DepartmentProfile>());

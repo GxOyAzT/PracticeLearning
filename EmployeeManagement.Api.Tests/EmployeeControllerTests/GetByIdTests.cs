@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using EmployeeManagement.Api.Data;
 
 namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
 {
@@ -23,25 +24,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddDbContext<ApplicationDataContext>(options =>
-                    {
-                        options.UseSqlServer(GetTestDatabaseConnection.GetConnection());
-                    });
-
-                    services.AddCors(options =>
-                    {
-                        options.AddPolicy("FirstPolicy",
-                            builder =>
-                            {
-                                builder.WithOrigins("http://127.0.0.1:5500")
-                                                    .AllowAnyHeader()
-                                                    .AllowAnyMethod();
-                            });
-                    });
-
-                    services.AddAutoMapper(e => e.AddProfile<EmployeeProfile>());
-
-                    services.AddControllers();
+                    services.AddSingleton<IApplicationDataContextFactory, ApplicationDataContextFactoryTests>();
                 });
             }).CreateClient();
         }
@@ -49,7 +32,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
         [Fact]
         public async Task EmployeeGetByIdTestA()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var answer = await _client.GetAsync("/api1.1/employee/cbb00d49-c991-4964-86d4-92ff7c25a07b");
@@ -65,7 +48,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
         [Fact]
         public async Task EmployeeGetByIdTestB()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var answer = await _client.GetAsync("/api1.1/employee/abc");
@@ -82,7 +65,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
         [Fact]
         public async Task EmployeeGetByIdTestC()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var answer = await _client.GetAsync("/api1.1/employee/00000000-0000-0000-0000-000000000000");

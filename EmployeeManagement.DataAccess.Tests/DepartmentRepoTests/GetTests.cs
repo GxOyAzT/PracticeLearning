@@ -4,6 +4,7 @@ using Xunit;
 
 namespace EmployeeManagement.DataAccess.Tests.DepartmentRepoTests
 {
+    [Collection("Sequential")]
     public class GetTests
     {
         [Fact]
@@ -11,7 +12,7 @@ namespace EmployeeManagement.DataAccess.Tests.DepartmentRepoTests
         {
             InitializeDatabase(new HardcodedDataV2());
 
-            IDepartmentRepo _departmentRepo = new DepartmentRepo();
+            IDepartmentRepo _departmentRepo = new DepartmentRepo(new ApplicationDataContextFactory());
 
             var ret = _departmentRepo.Get();
 
@@ -20,7 +21,7 @@ namespace EmployeeManagement.DataAccess.Tests.DepartmentRepoTests
 
         static void InitializeDatabase(IHardcodedData hardcodedData)
         {
-            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData);
+            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData, new ApplicationDataContextFactory().Build());
             resetDatabaseProcessor.Reset();
         }
     }

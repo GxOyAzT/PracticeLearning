@@ -6,6 +6,7 @@ using Xunit;
 
 namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
 {
+    [Collection("Sequential")]
     public class UpdateEmployeeTests
     {
         [Fact]
@@ -23,11 +24,11 @@ namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
                 FullName = "FullName Cc"
             };
 
-            IEmployeeRepo _employeeRepo = new EmployeeRepo();
+            IEmployeeRepo _employeeRepo = new EmployeeRepo(new ApplicationDataContextFactory());
 
             _employeeRepo.Update(emp);
 
-            using (var db = new ApplicationDataContext())
+            using (var db = new ApplicationDataContextFactory().Build())
             {
                 Assert.Equal(7, db.EmployeeModels.Count());
                 var changedRecord = db.EmployeeModels.FirstOrDefault(e => e.Id == Guid.Parse("b0b02cd9-0ef0-40ef-922d-5632ca76f25c"));
@@ -42,7 +43,7 @@ namespace EmployeeManagement.DataAccess.Tests.EmployeeRepoTests
 
         static void InitializeDatabase(IHardcodedData hardcodedData)
         {
-            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData);
+            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData, new ApplicationDataContextFactory().Build());
             resetDatabaseProcessor.Reset();
         }
     }

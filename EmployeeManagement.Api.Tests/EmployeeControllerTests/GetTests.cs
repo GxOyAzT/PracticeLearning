@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
 using Newtonsoft.Json;
-
+using EmployeeManagement.Api.Data;
 
 namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
 {
@@ -26,36 +26,15 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddDbContext<ApplicationDataContext>(options =>
-                    {
-                        options.UseSqlServer(GetTestDatabaseConnection.GetConnection());
-                    });
-
-                    services.AddCors(options =>
-                    {
-                        options.AddPolicy("FirstPolicy",
-                            builder =>
-                            {
-                                builder.WithOrigins("http://127.0.0.1:5500")
-                                                    .AllowAnyHeader()
-                                                    .AllowAnyMethod();
-                            });
-                    });
-
-                    services.AddAutoMapper(e => e.AddProfile<EmployeeProfile>());
-
-                    services.AddControllers();
+                    services.AddSingleton<IApplicationDataContextFactory, ApplicationDataContextFactoryTests>();
                 });
-            }).CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+            }).CreateClient(new WebApplicationFactoryClientOptions());
         }
 
         [Fact]
         public async Task TestA()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var response = await _client.GetAsync("/api1.1/employee");

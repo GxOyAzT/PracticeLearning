@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using EmployeeManagement.Api.Data;
 
 namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
 {
@@ -24,25 +25,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddDbContext<ApplicationDataContext>(options =>
-                    {
-                        options.UseSqlServer(GetTestDatabaseConnection.GetConnection());
-                    });
-
-                    services.AddCors(options =>
-                    {
-                        options.AddPolicy("FirstPolicy",
-                            builder =>
-                            {
-                                builder.WithOrigins("http://127.0.0.1:5500")
-                                                    .AllowAnyHeader()
-                                                    .AllowAnyMethod();
-                            });
-                    });
-
-                    services.AddAutoMapper(e => e.AddProfile<EmployeeProfile>());
-
-                    services.AddControllers();
+                    services.AddSingleton<IApplicationDataContextFactory, ApplicationDataContextFactoryTests>();
                 });
             }).CreateClient();
         }
@@ -50,14 +33,14 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
         [Fact]
         public async Task TestA()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var response = await _client.DeleteAsync("/api1.1/employee/cbb00d49-c991-4964-86d4-92ff7c25a07b");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            using (var db = new ApplicationDataContext())
+            using (var db = new ApplicationDataContextFactoryTests().Build())
             {
                 Assert.Equal(2, await db.EmployeeModels.CountAsync());
                 Assert.Null(await db.EmployeeModels.FirstOrDefaultAsync(e => e.Id == new Guid("cbb00d49-c991-4964-86d4-92ff7c25a07b")));
@@ -67,7 +50,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
         [Fact]
         public async Task TestB()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactoryTests().Build());
             dataProcessor.Reset();
 
             var response = await _client.DeleteAsync("/api1.1/employee/abc");
@@ -79,7 +62,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
             Assert.Equal("Incorret employee id format", returnObject.ErrorMessage);
             Assert.Equal(101, returnObject.InternalErrorCode);
 
-            using (var db = new ApplicationDataContext())
+            using (var db = new ApplicationDataContextFactoryTests().Build())
             {
                 Assert.Equal(3, await db.EmployeeModels.CountAsync());
             }
@@ -88,7 +71,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
         [Fact]
         public async Task TestC()
         {
-            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1());
+            var dataProcessor = new ResetDatabaseProcessor(new HardcodedDataV1(), new ApplicationDataContextFactory().Build());
             dataProcessor.Reset();
 
             var response = await _client.DeleteAsync("/api1.1/employee/00000000-0000-0000-0000-000000000000");
@@ -100,7 +83,7 @@ namespace EmployeeManagement.Api.Tests.EmployeeControllerTests
             Assert.Equal("Cannot find user of id 00000000-0000-0000-0000-000000000000", returnObject.ErrorMessage);
             Assert.Equal(101, returnObject.InternalErrorCode);
 
-            using (var db = new ApplicationDataContext())
+            using (var db = new ApplicationDataContextFactory().Build())
             {
                 Assert.Equal(3, await db.EmployeeModels.CountAsync());
             }

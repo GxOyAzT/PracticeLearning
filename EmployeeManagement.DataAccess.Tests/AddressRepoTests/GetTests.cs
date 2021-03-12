@@ -5,6 +5,7 @@ using Xunit;
 
 namespace EmployeeManagement.DataAccess.Tests.AddressRepoTests
 {
+    [Collection("Sequential")]
     public class GetTests
     {
         [Fact]
@@ -12,7 +13,7 @@ namespace EmployeeManagement.DataAccess.Tests.AddressRepoTests
         {
             InitializeDatabase(new HardcodedDataV3());
 
-            var _addressRepo = new AddressRepo();
+            var _addressRepo = new AddressRepo(new ApplicationDataContextFactory());
 
             var output = _addressRepo.Get();
 
@@ -24,7 +25,7 @@ namespace EmployeeManagement.DataAccess.Tests.AddressRepoTests
         {
             InitializeDatabase(new HardcodedDataV3());
 
-            var _addressRepo = new AddressRepo();
+            var _addressRepo = new AddressRepo(new ApplicationDataContextFactory());
 
             var output = _addressRepo.Get(Guid.Parse("BB45E083-096D-4EE6-BC10-60A5E5E7A7FE"));
 
@@ -37,7 +38,7 @@ namespace EmployeeManagement.DataAccess.Tests.AddressRepoTests
         {
             InitializeDatabase(new HardcodedDataV3());
 
-            var _addressRepo = new AddressRepo();
+            var _addressRepo = new AddressRepo(new ApplicationDataContextFactory());
 
             var output = _addressRepo.Get(Guid.Parse("00000000-096D-4EE6-BC10-60A5E5E7A7FE"));
 
@@ -49,7 +50,7 @@ namespace EmployeeManagement.DataAccess.Tests.AddressRepoTests
         {
             InitializeDatabase(new HardcodedDataV3());
 
-            var _addressRepo = new AddressRepo();
+            var _addressRepo = new AddressRepo(new ApplicationDataContextFactory());
 
             var output = _addressRepo.GetByEmployeeId(Guid.Parse("00000000-096D-4EE6-BC10-60A5E5E7A7FE"));
 
@@ -61,7 +62,7 @@ namespace EmployeeManagement.DataAccess.Tests.AddressRepoTests
         {
             InitializeDatabase(new HardcodedDataV3());
 
-            var _addressRepo = new AddressRepo();
+            var _addressRepo = new AddressRepo(new ApplicationDataContextFactory());
 
             var output = _addressRepo.GetByEmployeeId(Guid.Parse("51b0f8ee-17c2-4db0-8665-902261af9bfe"));
 
@@ -71,7 +72,7 @@ namespace EmployeeManagement.DataAccess.Tests.AddressRepoTests
 
         static void InitializeDatabase(IHardcodedData hardcodedData)
         {
-            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData);
+            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData, new ApplicationDataContextFactory().Build());
             resetDatabaseProcessor.Reset();
         }
     }

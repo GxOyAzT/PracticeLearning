@@ -10,16 +10,6 @@ namespace EmployeeManagement.DataAccess
         {
         }
 
-        public ApplicationDataContext()
-        {
-
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EmployeeManagamentTests;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-        }
-
         public DbSet<EmployeeModel> EmployeeModels { get; set; }
         public DbSet<DepartmentModel> Departments { get; set; }
         public DbSet<AddressModel> AddressModels { get; set; }

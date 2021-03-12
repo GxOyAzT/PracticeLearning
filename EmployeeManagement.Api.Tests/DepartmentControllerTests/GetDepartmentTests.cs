@@ -1,4 +1,5 @@
-﻿using EmployeeManagement.DataAccess;
+﻿using EmployeeManagement.Api.Data;
+using EmployeeManagement.DataAccess;
 using EmployeeManagement.DataModel;
 using EmployeeManagement.TestsMockData;
 using Microsoft.AspNetCore.TestHost;
@@ -24,29 +25,7 @@ namespace EmployeeManagement.Api.Tests.DepartmentControllerTests
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddCors(options =>
-                    {
-                        options.AddPolicy("FirstPolicy",
-                            builder =>
-                            {
-                                builder.WithOrigins("https://localhost:44374")
-                                                    .AllowAnyHeader()
-                                                    .AllowAnyMethod();
-                            });
-                    });
-
-                    services.AddDbContext<ApplicationDataContext>(options =>
-                    {
-                        options.UseSqlServer(GetTestDatabaseConnection.GetConnection());
-                    });
-
-                    services.AddSingleton<IEmployeeRepo, EmployeeRepo>();
-                    services.AddSingleton<IDepartmentRepo, DepartmentRepo>();
-
-                    services.AddAutoMapper(e => e.AddProfile<EmployeeProfile>());
-                    services.AddAutoMapper(e => e.AddProfile<DepartmentProfile>());
-
-                    services.AddControllers();
+                    services.AddSingleton<IApplicationDataContextFactory, ApplicationDataContextFactoryTests>();
                 });
             }).CreateClient();
         }
@@ -67,7 +46,7 @@ namespace EmployeeManagement.Api.Tests.DepartmentControllerTests
 
         static void InitializeDatabase(IHardcodedData hardcodedData)
         {
-            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData);
+            ResetDatabaseProcessor resetDatabaseProcessor = new ResetDatabaseProcessor(hardcodedData, new ApplicationDataContextFactoryTests().Build());
             resetDatabaseProcessor.Reset();
         }
     }

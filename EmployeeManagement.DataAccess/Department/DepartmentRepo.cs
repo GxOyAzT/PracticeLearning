@@ -6,12 +6,15 @@ namespace EmployeeManagement.DataAccess
 {
     public class DepartmentRepo : IDepartmentRepo
     {
+        private readonly ApplicationDataContext _context;
+
+        public DepartmentRepo(IApplicationDataContextFactory contextFacotry)
+        {
+            this._context = contextFacotry.Build();
+        }
         public List<DepartmentModel> Get()
         {
-            using (var db = new ApplicationDataContext())
-            {
-                return db.Departments.ToList();
-            }
+            return _context.Departments.ToList();
         }
     }
 }
