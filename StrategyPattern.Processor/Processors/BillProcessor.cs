@@ -1,19 +1,12 @@
 ﻿using StrategyPattern.Processor.Models;
 using StrategyPattern.Processor.PriceCalculators;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace StrategyPattern.Processor.Processors
 {
     public class BillProcessor : IBillProcessor
     {
-        private readonly IProductPriceCalculator _productPriceCalculator;
-
-        public BillProcessor(IProductPriceCalculator productPriceCalculator)
-        {
-            _productPriceCalculator = productPriceCalculator;
-        }
+        private IProductPriceCalculator _productPriceCalculator;
 
         List<ProductDbModel> ProductDbModels { get; set; }
 
@@ -29,5 +22,8 @@ namespace StrategyPattern.Processor.Processors
 
         public void GetProducts(List<ProductDbModel> productDbModels) => 
             ProductDbModels = productDbModels;
+
+        public void SetCalculator(IProductPriceCalculator productPriceCalculator) => 
+            _productPriceCalculator = productPriceCalculator;
     }
 }

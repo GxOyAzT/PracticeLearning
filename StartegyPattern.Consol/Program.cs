@@ -16,10 +16,12 @@ namespace StartegyPattern.Consol
             foreach (var product in products)
                 product.Quanitiy = 1;
 
-            var billProcessorBase = new BillProcessor(new ProductPriceCalculator());
+            var billProcessorBase = new BillProcessor();
+            billProcessorBase.SetCalculator(new ProductPriceCalculator());
             billProcessorBase.GetProducts(productRepo.Products);
 
-            var billProcessorLoyality = new BillProcessor(new ProductPriceCalculatorLoyalityCard());
+            var billProcessorLoyality = new BillProcessor();
+            billProcessorLoyality.SetCalculator(new ProductPriceCalculatorLoyalityCard());
             billProcessorLoyality.GetProducts(productRepo.Products);
 
             Console.WriteLine($"Base: {billProcessorBase.CalculateTotal()}");
