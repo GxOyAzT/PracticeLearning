@@ -6,9 +6,9 @@ namespace Algorithms.ClassLibrary
 {
     public class FTPLink
     {
-        public string CutString(string url)
-        {
-            return url.Substring(0, ftpDir.LastIndexOf('\\'))
-        }
+        //public string CutString(string url)
+        //{
+        //    return url.Substring(0, ftpDir.LastIndexOf('\\'));
+        //}
     }
 }
