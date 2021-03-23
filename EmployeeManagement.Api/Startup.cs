@@ -54,7 +54,7 @@ namespace EmployeeManagement.Api
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors("Open");
 
             app.UseAuthorization();
 

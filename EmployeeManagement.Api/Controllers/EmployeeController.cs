@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace EmployeeManagement.Api.Controllers
 {
@@ -28,6 +29,7 @@ namespace EmployeeManagement.Api.Controllers
         [HttpGet]
         public IActionResult GetEmployees()
         {
+            //Thread.Sleep(1000 * 5);
             return Ok(_mapper.Map<IEnumerable<EmployeeBasicDTO>>(_employeeRepo.Get()));
         }
 

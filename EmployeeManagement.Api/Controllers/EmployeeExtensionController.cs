@@ -11,7 +11,7 @@ namespace EmployeeManagement.Api.Controllers
 {
     [ApiController]
     [Route("api1.1/[controller]")]
-    [EnableCors("Open")]
+    //[EnableCors("Open")]
     public class EmployeeExtensionController : ControllerBase
     {
         private readonly IEmployeeRepo _employeeRepo;
