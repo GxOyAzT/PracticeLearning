@@ -23,6 +23,17 @@ namespace Auth.Api.IdentityJwt
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Open",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                    });
+            });
+
             services.AddControllers();
 
             services.AddDbContext<UserDbContext>(config =>
@@ -61,6 +72,8 @@ namespace Auth.Api.IdentityJwt
                 };
             });
 
+
+
             services.AddTransient<IGenerateToken, GenerateToken>();
         }
 
@@ -72,6 +85,8 @@ namespace Auth.Api.IdentityJwt
             }
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 

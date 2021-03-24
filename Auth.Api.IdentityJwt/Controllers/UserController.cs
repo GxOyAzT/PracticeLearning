@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Auth.Api.IdentityJwt.UserData;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -9,6 +11,7 @@ namespace Auth.Api.IdentityJwt.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [EnableCors("Open")]
     public class UserController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -29,35 +32,38 @@ namespace Auth.Api.IdentityJwt.Controllers
         }
 
         [HttpGet]
-        [Route("connectionClose")]
+        [Route("connectionclose")]
         public async Task<IActionResult> ConnectionClose()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(string userName, string password)
+        public async Task<IActionResult> Register([FromBody] UserModel userModel)
         {
+            if (userModel == null)
+                return BadRequest();
+
             var user = new IdentityUser()
             {
-                UserName = userName,
+                UserName = userModel.Username,
                 Email = ""
             };
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, userModel.Password);
 
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string userName, string password)
+        public async Task<IActionResult> Login([FromBody] UserModel userModel)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userModel.Username);
 
             if (user != null)
             {
