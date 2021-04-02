@@ -1,4 +1,6 @@
-using Auth.Api.Identity.Data;
+using Auth.JwtIdentity.TenantDb.DataAccess;
+using Auth.JwtIdentity.TenantDb.Models;
+using Auth.JwtIdentity.TenantDb.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,41 +11,37 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
-namespace Auth.Api.IdentityJwt
+namespace Auth.JwtIdentity.TenantDb
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IContextOptionsBuilder, ContextOptionsBuilder>();
+            services.AddScoped(serviceProvider =>
             {
-                options.AddPolicy("Open",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                    });
-            });
+                var todoConnectionStringBuilder = serviceProvider.GetService<IContextOptionsBuilder>();
 
-            services.AddControllers();
+                return new AppDbContext(todoConnectionStringBuilder.CurrentContextOptions);
+            });
 
             services.AddDbContext<UserDbContext>(config =>
             {
                 config.UseSqlServer(Configuration.GetConnectionString("UsersDatabase"));
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            services.AddIdentity<AplicationUser, IdentityRole>(config =>
             {
                 config.Password.RequiredLength = 4;
                 config.Password.RequireDigit = false;
@@ -74,9 +72,22 @@ namespace Auth.Api.IdentityJwt
                 };
             });
 
-
+            services.AddAuthorization(e =>
+            {
+                e.AddPolicy("admin",
+                    policy =>
+                    {
+                        policy.RequireClaim("permissions");
+                    });
+            });
 
             services.AddTransient<IGenerateToken, GenerateToken>();
+
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth.JwtIdentity.TenantDb", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -84,11 +95,13 @@ namespace Auth.Api.IdentityJwt
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth.JwtIdentity.TenantDb v1"));
             }
 
-            app.UseRouting();
+            app.UseHttpsRedirection();
 
-            app.UseCors();
+            app.UseRouting();
 
             app.UseAuthentication();
 
@@ -96,7 +109,7 @@ namespace Auth.Api.IdentityJwt
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute().RequireAuthorization();
+                endpoints.MapControllers();
             });
         }
     }

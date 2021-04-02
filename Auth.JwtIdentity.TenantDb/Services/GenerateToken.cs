@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Auth.Api.IdentityJwt
+namespace Auth.JwtIdentity.TenantDb.Services
 {
     public class GenerateToken : IGenerateToken
     {
@@ -24,7 +24,37 @@ namespace Auth.Api.IdentityJwt
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userId), // value: User.Id
-                new Claim("db-id", "abc")
+                new Claim("db-id", "TestDb")
+            };
+
+            var secretBytes = Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]);
+
+            var key = new SymmetricSecurityKey(secretBytes);
+
+            var algorithm = SecurityAlgorithms.HmacSha256;
+
+            var signCredentials = new SigningCredentials(key, algorithm);
+
+            var token = new JwtSecurityToken(
+                _configuration["JwtSettings:Issuer"],
+                _configuration["JwtSettings:Audenice"],
+                claims,
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddDays(1),
+                signCredentials);
+
+            var tokenJson = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return tokenJson;
+        }
+
+        public string GenerateTokenMethodWithAdminPermissions(string userId)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId), // value: User.Id
+                new Claim("permissions", "administrator"),
+                new Claim("db-id", "TestDb")
             };
 
             var secretBytes = Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]);
