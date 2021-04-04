@@ -31,7 +31,7 @@ namespace EmployeeManagement.Api
                     });
             });
 
-            services.AddDbContext<ApplicationDataContext>(options =>
+            services.AddDbContext<ApplicationContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ApplicationDatabaseTest"));
             });
