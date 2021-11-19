@@ -1,0 +1,33 @@
+﻿<Window x:Class="MessageRetreiverPractice.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MessageRetreiverPractice"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ListView x:Name="ListV" ItemsSource="{Binding MessageModel}">
+
+            <ListView.View>
+
+                <GridView AllowsColumnReorder="true"
+              ColumnHeaderToolTip="Employee Information">
+
+                    <GridViewColumn DisplayMemberBinding=
+                          "{Binding Path=Id}" 
+                      Header="Id" Width="100"/>
+
+                    <GridViewColumn DisplayMemberBinding=
+                          "{Binding Path=WasSeen}" 
+                      Header="Was Seen" Width="100"/>
+
+                    <GridViewColumn DisplayMemberBinding=
+                          "{Binding Path=Message}" 
+                      Header="Message" Width="100"/>
+                </GridView>
+
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebAppPractice.HealthChecks;
 
 namespace WebAppPractice
 {
@@ -29,6 +30,9 @@ namespace WebAppPractice
             //});
 
             services.AddMvc();
+
+            services.AddHealthChecks().AddCheck<ExampleHealthCheck>("example_health_check")
+                                      .AddCheck<SecondExampleHealthCheck>("second_example_health_check");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,6 +50,7 @@ namespace WebAppPractice
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
