@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleUI", "ConsoleUI\ConsoleUI.csproj", "{D6C34205-CC82-48CB-9031-5534CC136613}"
 EndProject
@@ -85,7 +85,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice.RefitNuget.ApiClie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PracticeEvents", "PracticeEvents\PracticeEvents.csproj", "{DBF5A1BE-2968-4B9F-86BC-70596F37D2B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsPractice", "TestsPractice\TestsPractice.csproj", "{8FD7775C-5169-4E0B-8245-055F8CA5E856}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsPractice", "TestsPractice\TestsPractice.csproj", "{8FD7775C-5169-4E0B-8245-055F8CA5E856}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice.ApiAsyncAwait", "Practice.ApiAsyncAwait\Practice.ApiAsyncAwait.csproj", "{23DC494E-49BD-46E6-8E65-9723FF508369}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NETSixPractice", "NETSixPractice\NETSixPractice.csproj", "{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -579,6 +583,30 @@ Global
 		{8FD7775C-5169-4E0B-8245-055F8CA5E856}.Release|iPhone.Build.0 = Release|Any CPU
 		{8FD7775C-5169-4E0B-8245-055F8CA5E856}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{8FD7775C-5169-4E0B-8245-055F8CA5E856}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Release|iPhone.Build.0 = Release|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{23DC494E-49BD-46E6-8E65-9723FF508369}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Release|iPhone.Build.0 = Release|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{57411B92-75C6-4EB7-B6D9-0F12E3F177CE}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
